@@ -1,33 +1,61 @@
 {
   "name": "bc-web3js",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A Typescript SDK for interacting with th ByteChain Testnet Alpha.",
   "keywords": [
     "ByteChain",
     "BlockChain",
-    "SDK"
+    "SDK",
+    "Web3"
   ],
-  "homepage": "https://github.com/ByteChain-Labs/bc-web3js#readme",
+  "homepage": "https://github.com/nifemibosun/bc-web3js#readme",
   "bugs": {
-    "url": "https://github.com/ByteChain-Labs/bc-web3js/issues"
+    "url": "https://github.com/nifemibosun/bc-web3js/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ByteChain-Labs/bc-web3js.git"
+    "url": "git+https://github.com/nifemibosun/bc-web3js.git"
   },
   "license": "Apache-2.0",
-  "author": "ByteChain-Labs",
-  "type": "commonjs",
-  "main": "index.js",
+  "author": "nifemibosun <nifemibosun70@gmail.com>",
+  "type": "module",
+  "main": "./dist/bc-web3.js",
+  "module": "./dist/bc-web3.js",
+  "types": "./dist/bc-web3.d.ts",
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "import": "./dist/bc-web3.js",
+      "require": "./dist/bc-web3.js",
+      "types": "./dist/bc-web3.d.ts"
+    },
+    "./account": {
+      "import": "./dist/account.js",
+      "require": "./dist/account.js",
+      "types": "./dist/account.d.ts"
+    },
+    "./interfaces": {
+      "import": "./dist/interfaces.js",
+      "require": "./dist/interfaces.js",
+      "types": "./dist/interfaces.d.ts"
+    },
+    "./utils": {
+      "import": "./dist/utils.js",
+      "require": "./dist/utils.js",
+      "types": "./dist/utils.d.ts"
+    }
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "test": "echo \"Error: no test specified for bc-web3js yet",
+    "prepublishOnly": "npm run build && npm test"
   },
   "devDependencies": {
-    "@types/node": "^24.0.3"
+    "@types/elliptic": "^6.4.18",
+    "@types/node": "^24.0.3",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@types/bs58": "^4.0.4",
-    "@types/elliptic": "^6.4.18",
     "bs58": "^6.0.0",
     "elliptic": "^6.6.1"
   }
