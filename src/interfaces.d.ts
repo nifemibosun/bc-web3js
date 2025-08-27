@@ -1,12 +1,18 @@
+import { Tx_Type } from "./utils.js";
+
+
 export interface Transaction {
+    type: Tx_Type;
     amount: number;
     sender: string;
     recipient: string;
-    id: string;
-    publicKey: string;
+    tx_id: string;
+    bytecode?: string; 
+    contract_addr?: string;
     signature: string;
     nonce: number;
     timestamp: number;
+    publicKey: string;
 }
 
 interface BlockHeader {
@@ -22,12 +28,4 @@ interface BlockHeader {
 interface Block {
     block_header: BlockHeader;
     transactions: Transaction[];
-}
-
-export interface BlockChain {
-    tx_pool: Transaction[];
-    chain: Block[];
-    difficulty: number;
-    addr_bal: Map<string, number>;
-    addr_nonce: Map<string, number>;
 }
