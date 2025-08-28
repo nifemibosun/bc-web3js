@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 
 // Take a buffer as input an return a buffer as output
 function hash_func(data_buf: Buffer): Buffer {

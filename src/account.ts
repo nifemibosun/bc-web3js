@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 import elliptic_pkg from 'elliptic';
 import base58 from 'bs58';
 import Tx from './transaction.js';
