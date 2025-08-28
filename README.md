@@ -25,15 +25,6 @@ Before using the bc-web3js SDK, you'll need an instance of your core ByteChain B
 
 Make sure to import your BlockChain class from your core ByteChain module:
 
-```typescript
-
-import { BlockChain } from 'your-bytechain-core-module';
-
-// Example of how you might get your blockchain instance:
-
-const myByteChainInstance = new BlockChain(); // This depends on your ByteChain node's setup
-
-```
 
 ## 1. Basic Setup & Querying Balance
 This example demonstrates how to initialize the bc-web3js SDK and perform basic queries like checking an account's balance and validating an address.
@@ -45,12 +36,8 @@ This example demonstrates how to initialize the bc-web3js SDK and perform basic 
 
 import BCWeb3 from 'bc-web3js';
 
-import { BlockChain } from 'your-bytechain-core-module'; // Adjust path to your BlockChain implementation
-
-
-
-// 1. Get an instance of your ByteChain blockchain
-const myByteChainInstance = new BlockChain();
+// 1. Get a url of the blockchain node/peer you wish to use
+const nodeUrl = "http://your-node-url-and-port";
 
 // 2. Initialize BCWeb3 with your blockchain instance
 const bcWeb3 = new BCWeb3(myByteChainInstance);
@@ -58,15 +45,9 @@ const bcWeb3 = new BCWeb3(myByteChainInstance);
 // 3. Query an account balance
 const exampleAddress = 'BC1A2B3C4D5E6F7G8H9I0J1K2L3M4N5O6P7Q8R9S0T1U2V3W4X5Y6Z7';
 
-const balance = bcWeb3.get_acc_bal(exampleAddress);
+const balance = bcWeb3.get_bal(exampleAddress);
 
 console.log(`Balance of ${exampleAddress}: ${balance} BC`);
-
-// 4. Validate an address
-
-const isValid = BCWeb3.is_valid_address(exampleAddress);
-
-console.log(`Is ${exampleAddress} a valid ByteChain address? ${isValid}`);
 
 ```
 
@@ -79,15 +60,13 @@ This section covers how to create new ByteChain accounts, load existing ones usi
 
 import BCWeb3 from 'bc-web3js';
 
-import { BlockChain } from 'your-bytechain-core-module';
 
+const nodeUrl = "http://your-node-url-and-port";
 
-const myByteChainInstance = new BlockChain();
-
-const bcWeb3 = new BCWeb3(myByteChainInstance);
+const bcWeb3 = new BCWeb3(nodeUrl);
 
 // 1. Create a new account (generates a new private key internally)
-const newAccount = bcWeb3.load_account();
+const newAccount = bcWeb3.createAccount();
 
 console.log('--- New Account Created ---');
 
@@ -116,60 +95,15 @@ console.log('Sender Balance:', bcWeb3.get_acc_bal(senderAccount.blockchain_addr)
 
 const recipientAddress = 'BC_ANOTHER_ADDRESS_HERE'; // Replace with a recipient ByteChain address
 
-const amount = 10; // Amount of ByteCoin to send
+const amount = 10; // Amount of Byte to send
 
 
-try {
-
-    const signedTransaction = bcWeb3.create_new_tx(senderAccount, amount, recipientAddress);
-
-    console.log('\n--- Transaction Signed ---');
-
-    console.log('Transaction ID:', signedTransaction.id);
-
-    console.log('Sender:', signedTransaction.sender);
-
-    console.log('Recipient:', signedTransaction.recipient);
-
-    console.log('Amount:', signedTransaction.amount);
-
-    console.log('Nonce:', signedTransaction.nonce);
-
-    console.log('Timestamp:', new Date(signedTransaction.timestamp).toISOString());
-
-    console.log('Signature:', signedTransaction.signature);
-
-
-
-    // 4. (Next Step - Your Responsibility): Send the signed transaction to the network.
-
-    //    The `bc-web3js` SDK currently only signs the transaction. You need to implement
-
-    //    the logic to submit this `signedTransaction` to your ByteChain node's
-
-    //    transaction pool and broadcast it over your p2p network (e.g., via libp2p).
-
-    //    Example (conceptual, you would add this method to BCWeb3 or your core node):
-
-    //    await bcWeb3.send_transaction(signedTransaction);
-
-
-
-    console.log('\nSigned transaction is ready. Implement `send_transaction` within your application or extended SDK to broadcast it to the network.');
-
-} catch (error: any) {
-
-    console.error('\nError creating/signing transaction:', error.message);
-
-}
 
 ```
 
 
 
 ## 3. Blockchain Data Querying
-
-
 
 Retrieve information about blocks and transactions from the blockchain instance.
 
