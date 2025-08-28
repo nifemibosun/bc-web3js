@@ -1,6 +1,6 @@
 {
   "name": "bc-web3js",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A Typescript SDK for interacting with th ByteChain Testnet Alpha.",
   "keywords": [
     "ByteChain",
