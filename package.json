@@ -19,20 +19,16 @@
   "license": "Apache-2.0",
   "author": "nifemibosun <nifemibosun70@gmail.com>",
   "type": "module",
-  "main": "./dist/bc-web3.node.js",
-  "browser": {
-    "crypto": "crypto-browserify",
-    "./dist/index.node.js": "./dist/index.browser.js"
-  },
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "scripts": {
-    "build": "tsc",
-    "prepublishOnly": "npm run build"
-  },
   "files": [
     "dist",
     "*.d.ts"
   ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
   "devDependencies": {
     "@types/elliptic": "^6.4.18",
     "@types/node": "^24.0.3",
