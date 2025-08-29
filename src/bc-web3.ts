@@ -12,11 +12,11 @@ class BCWeb3 {
         this.provider = new Provider(node_url);
     }
 
-    async get_bal(address: string): Promise<number> {
+    async getBalance(address: string): Promise<number> {
         return await this.provider.check_balance(address);
     }
 
-    async get_nonce(address: string): Promise<number> {
+    async getNonce(address: string): Promise<number> {
         return await this.provider.check_nonce(address);
     }
 
@@ -28,17 +28,17 @@ class BCWeb3 {
         this.wallet = new Wallet(new Account(privKey), this.provider);
     }
 
-    async get_tx_pool(): Promise<Transaction[]> {
+    async getTxPool(): Promise<Transaction[]> {
         const transactionPool = await this.provider.get_tx_pool();
         return [...transactionPool];
     }
 
-    async get_block(block_id: number): Promise<Block>  {
+    async getBlock(block_id: number): Promise<Block>  {
         const block = await this.provider.get_block(block_id);
         return block;
     }
 
-    async get_chain(): Promise<Block[]>  {
+    async getChain(): Promise<Block[]>  {
         const chain = await this.provider.get_chain();
         return [...chain];
     }
