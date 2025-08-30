@@ -1,7 +1,7 @@
 {
   "name": "bc-web3js",
-  "version": "2.2.1",
-  "description": "A Typescript SDK for interacting with th ByteChain Testnet Alpha.",
+  "version": "2.2.2",
+  "description": "A Typescript SDK for interacting with the ByteChain Blockchain.",
   "keywords": [
     "ByteChain",
     "BlockChain",
@@ -19,11 +19,17 @@
   "license": "Apache-2.0",
   "author": "nifemibosun <nifemibosun70@gmail.com>",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/bc-web3.js",
+  "types": "./dist/bc-web3.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/bc-web3.js",
+      "require": "./dist/bc-web3.js",
+      "types": "./dist/bc-web3.d.ts"
+    }
+  },
   "files": [
-    "dist",
-    "*.d.ts"
+    "dist"
   ],
   "scripts": {
     "build": "tsc",
@@ -36,7 +42,6 @@
   },
   "dependencies": {
     "bs58": "^6.0.0",
-    "crypto-browserify": "^3.12.1",
     "elliptic": "^6.6.1"
   }
 }
