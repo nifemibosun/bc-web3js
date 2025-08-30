@@ -1,90 +1,61 @@
-import base58 from "bs58";
-import crypto from "crypto";
-import { Block, BlockChain, Transaction } from "./interfaces.js";
+import { Block, Transaction } from "./interfaces.js";
 import Account from "./account.js";
+import Provider from "./provider.js";
+import Wallet from "./wallet.js";
 
 
 class BCWeb3 {
-    private bc_instance: BlockChain;
-    private accounts: Map<string, Account> = new Map();
+    provider: Provider;
+    wallet!: Wallet;
 
-    constructor(instance: BlockChain) {
-        this.bc_instance = instance;
+    constructor(node_url: string) {
+        this.provider = new Provider(node_url);
     }
 
-    static is_valid_address(address: string): boolean {
-        try {
-            const decodedUint8 = base58.decode(address);
-            const decoded = Buffer.from(decodedUint8); 
-
-            if (decoded.length < 5) return false;
-            const payload = decoded.slice(0, decoded.length - 4);
-            const checksum = decoded.slice(decoded.length - 4);
-
-            const calculated_checksum = crypto.createHash('sha256')
-                                            .update(crypto.createHash('sha256')
-                                            .update(payload)
-                                            .digest())
-                                            .digest()
-                                            .slice(0, 4);
-
-            return checksum.equals(calculated_checksum);
-        } catch (e) {
-            console.error("Error validating address:", e);
-            return false;
-        }
+    async getBalance(address: string): Promise<number> {
+        return await this.provider.check_balance(address);
     }
 
-    get_acc_bal(address: string): number {
-        return this.bc_instance.addr_bal.get(address) ?? 0;
+    async getNonce(address: string): Promise<number> {
+        return await this.provider.check_nonce(address);
     }
 
-    load_account(priv_key?: string): Account {
-        const account = new Account(this.bc_instance, priv_key);
-        this.accounts.set(account.blockchain_addr, account);
-        return account;
+    createAccount() {
+        this.wallet = new Wallet(new Account(), this.provider);
     }
 
-    public get_account(address: string): Account | undefined {
-        return this.accounts.get(address);
+    loadAccount(privKey: string) {
+        this.wallet = new Wallet(new Account(privKey), this.provider);
     }
 
-    create_new_tx(account: Account, amount: number, recipient: string): Transaction {
-        if (!this.accounts.has(account.blockchain_addr)) {
-            throw new Error("Account not loaded in this BCWeb3 instance.");
-        }
-
-        const tx = account.acc_sign_tx(amount, recipient);
-        return tx;
+    async getTxPool(): Promise<Transaction[]> {
+        const transactionPool = await this.provider.get_tx_pool();
+        return [...transactionPool];
     }
 
-    get_block(block_id: number | string): Block | undefined {
-        if (typeof block_id === 'number') {
-            if (block_id < 0 || block_id >= this.bc_instance.chain.length) {
-                return undefined;
-            }
-
-            return this.bc_instance.chain[block_id];
-        } else {
-            return this.bc_instance.chain.find(block => block.block_header.block_hash === block_id);
-        }
+    async getBlock(block_id: number): Promise<Block>  {
+        const block = await this.provider.get_block(block_id);
+        return block;
     }
 
-    get_latest_block(): Block | undefined {
-        if (this.bc_instance.chain.length === 0) return undefined;
-        return this.bc_instance.chain[this.bc_instance.chain.length - 1];
+    async getChain(): Promise<Block[]>  {
+        const chain = await this.provider.get_chain();
+        return [...chain];
     }
 
-    get_transaction(tx_id: string): Transaction | undefined {
-        for (const block of this.bc_instance.chain) {
-            const tx = block.transactions.find(t => t.id === tx_id);
-            if (tx) return tx;
-        }
-        return this.bc_instance.tx_pool.find(t => t.id === tx_id);
+    async transfer(amount: number, recipient: string): Promise<string> {
+        const transferResult = await this.wallet.send_byte(amount, recipient);
+        return transferResult;
     }
 
-    get_transaction_pool(): Transaction[] {
-        return [...this.bc_instance.tx_pool];
+    async deployContract(bytecode: string): Promise<string> {
+        const deployResult = await this.wallet.deploy_contract(bytecode);
+        return deployResult;
+    }
+
+    async callContract(contractAddr: string): Promise<string> {
+        const callResult = await this.wallet.call_contract(contractAddr);
+        return callResult;
     }
 }
 

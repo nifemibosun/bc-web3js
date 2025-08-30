@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 
 // Take a buffer as input an return a buffer as output
 function hash_func(data_buf: Buffer): Buffer {
@@ -8,7 +8,7 @@ function hash_func(data_buf: Buffer): Buffer {
 }
 
 // Take a str as input an return a buffer as output
-function hash_tobuf(data_str: string): Buffer {
+export function hash_tobuf(data_str: string): Buffer {
     if (typeof data_str !== 'string') {
         throw new TypeError('Data must be a string.');
     }
@@ -20,7 +20,7 @@ function hash_tobuf(data_str: string): Buffer {
 }
 
 // Take a str as input an return a str as output
-function hash_tostr(data_str: string): string {
+export function hash_tostr(data_str: string): string {
     if (typeof data_str !== 'string') {
         throw new TypeError('Data must be a string.');
     }
@@ -29,9 +29,14 @@ function hash_tostr(data_str: string): string {
     return hashed_data;
 }
 
-const print = (...data: any): void => {
-    console.dir(...data, { depth: null, colors: true });
+export const GEN_CONTRACT_RECIPIENT: string = "0x000000000000000000000000000000000000000BC";
+
+export enum Tx_Type {
+    BYTE_TX = 'byte_tx',
+    CONTRACT = 'contract',
+    CONTRACT_CALL = 'contract_call'
 }
 
-
-export { hash_tostr, hash_tobuf, print };
+export const print = (...data: any): void => {
+    console.dir(...data, { depth: null, colors: true });
+}
