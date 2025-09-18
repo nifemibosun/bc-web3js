@@ -6,7 +6,7 @@ import Tx from "./transaction.js";
 
 class Wallet {
     constructor(
-        private account: Account,
+        public account: Account,
         private provider: Provider,
     ) {}
 
