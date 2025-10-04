@@ -1,6 +1,5 @@
 import base58 from "bs58";
 import elliptic_pkg from 'elliptic';
-import { Tx_Type } from "./utils.js";
 import { hash_tobuf, hash_tostr } from "./utils.js";
 import { Transaction } from "./interfaces.js";
 
@@ -10,13 +9,10 @@ const ec = new EC('secp256k1');
 
 
 class Tx implements Transaction {
-    type: Tx_Type;
     amount: number;
     sender: string;
     recipient: string;
     tx_id: string;
-    bytecode?: string; 
-    contract_addr?: string;
     signature: string;
     nonce: number;
     timestamp: number;
@@ -26,36 +22,23 @@ class Tx implements Transaction {
         amount: number,
         sender: string,
         recipient: string,
-        type: Tx_Type,
         timestamp: number,
         publicKey: string,
         signature: string,
         nonce: number,
-        bytecode?: string,
     ) {
         this.amount = amount;
         this.sender = sender;
         this.recipient = recipient;
-        this.type = type;
         this.timestamp = timestamp;
         this.publicKey = publicKey;
         this.signature = signature;
         this.nonce = nonce;
         this.tx_id = "";
-
-        if (this.type === Tx_Type.CONTRACT || bytecode !== undefined) {
-            this.bytecode = bytecode;
-        }
     }
 
     private get_signing_data(): string {
-        if (this.type === Tx_Type.BYTE_TX) {
-            return `${this.type}${this.amount}${this.sender}${this.recipient}${this.publicKey}${this.nonce}${this.timestamp}`;
-        } else if ((this.bytecode !== undefined || this.contract_addr !== undefined) || this.type === Tx_Type.CONTRACT) {
-            return `${this.type}${this.amount}${this.sender}${this.recipient}${this.publicKey}${this.nonce}${this.timestamp}${this.bytecode}${this.contract_addr}`;
-        }
-        
-        throw new Error('Unknown transaction type');
+        return `${this.amount}${this.sender}${this.recipient}${this.publicKey}${this.nonce}${this.timestamp}`;        
     }
 
     private compute_tx_id(): string {
@@ -67,11 +50,6 @@ class Tx implements Transaction {
 
     get_tx_nonce(): number {
         return this.nonce;
-    }
-
-    compute_contract_addr() {
-        const c_addr = hash_tostr(this.get_signing_data());
-        this.contract_addr = c_addr;
     }
 
     sign_tx(priv_key: string): Tx {

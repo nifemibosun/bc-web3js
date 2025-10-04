@@ -21,11 +21,11 @@ class BCWeb3 {
     }
 
     createAccount() {
-        this.wallet = new Wallet(new Account(), this.provider);
+        this.wallet = new Wallet(new Account());
     }
 
-    loadAccount(privKey: string) {
-        this.wallet = new Wallet(new Account(privKey), this.provider);
+    importAccount(privKey: string) {
+        this.wallet = new Wallet(new Account(privKey));
     }
 
     async getTxPool(): Promise<Transaction[]> {
@@ -44,18 +44,8 @@ class BCWeb3 {
     }
 
     async transfer(amount: number, recipient: string): Promise<string> {
-        const transferResult = await this.wallet.send_byte(amount, recipient);
+        const transferResult = await this.wallet.send_byte(this.provider, amount, recipient);
         return transferResult;
-    }
-
-    async deployContract(bytecode: string): Promise<string> {
-        const deployResult = await this.wallet.deploy_contract(bytecode);
-        return deployResult;
-    }
-
-    async callContract(contractAddr: string): Promise<string> {
-        const callResult = await this.wallet.call_contract(contractAddr);
-        return callResult;
     }
 }
 
