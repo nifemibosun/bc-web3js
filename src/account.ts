@@ -1,27 +1,33 @@
 import * as crypto from 'crypto';
+import { Buffer } from 'buffer';
 import elliptic_pkg from 'elliptic';
 import base58 from 'bs58';
-import Tx from './transaction.js';
+import Transaction from './transaction.js';
 
 const { ec: EC } = elliptic_pkg;
 const ec = new EC('secp256k1');
 
+function is_valid_priv_key(priv_key: string): boolean {
+    return typeof priv_key === 'string' && /^[0-9a-fA-F]{64}$/.test(priv_key);
+}
 
 class Account {
-    private priv_key: string;
-    pub_key: string;
-    blockchain_addr: string;
+    private priv_key: Buffer;
+    public  pub_key: string;
+    public  blockchain_addr: string;
 
     constructor(priv_key?: string) {
         if (priv_key) {
-            this.priv_key = priv_key;
-            this.pub_key = Account.create_pub_key(this.priv_key);
-            this.blockchain_addr = Account.create_blockchain_addr(this.pub_key);
+            if (!is_valid_priv_key(priv_key)) {
+                throw new Error("Invalid private key: must be a 64-character hex string");
+            }
+            this.priv_key = Buffer.from(priv_key, 'hex');
         } else {
-            this.priv_key = ec.genKeyPair().getPrivate('hex');
-            this.pub_key = Account.create_pub_key(this.priv_key);
-            this.blockchain_addr = Account.create_blockchain_addr(this.pub_key);
+            const priv_hex = ec.genKeyPair().getPrivate('hex');
+            this.priv_key = Buffer.from(priv_hex, 'hex');  
         }
+        this.pub_key = Account.create_pub_key(this.priv_key.toString('hex'));
+        this.blockchain_addr = Account.create_blockchain_addr(this.pub_key);
     }
 
     static new(): { priv_key: string, pub_key: string, blockchain_addr: string} {
@@ -43,17 +49,19 @@ class Account {
         const pub_key_buffer = Buffer.from(pub_key, 'hex');
         const sha256_hash = crypto.createHash('sha256').update(pub_key_buffer).digest();
         const ripemd160_hash = crypto.createHash('ripemd160').update(sha256_hash).digest();
-        const version_byte = Buffer.from([0xBC]);
+        const version_byte = Buffer.from([0xBC]); // Version byte 
         const payload = Buffer.concat([version_byte, ripemd160_hash]);
-        const checksum = crypto.createHash('sha256').update(crypto.createHash('sha256').update(payload).digest()).digest().slice(0, 4);
+        const checksum = crypto.createHash('sha256').update(
+            crypto.createHash('sha256').update(payload).digest()
+        ).digest().slice(0, 4);
         const final_payload = Buffer.concat([payload, checksum]);
         const blockchain_addr = base58.encode(final_payload);
         
         return blockchain_addr;
     }
 
-    sign_tx(tx: Tx): Tx {
-        return tx.sign_tx(this.priv_key);
+    sign_tx(tx: Transaction): Transaction {
+        return tx.sign_tx(this.priv_key.toString('hex'));
     }
 }
 

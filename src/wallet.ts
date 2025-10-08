@@ -12,7 +12,8 @@ class Wallet {
         try {
             const { pub_key, blockchain_addr } = this.account;
             const nonce = await provider.check_nonce(blockchain_addr);
-            const tx = new Tx(amount, blockchain_addr, recipient, Date.now(), pub_key, "", nonce + 1);
+            const fee = await provider.check_fee();
+            const tx = new Tx(amount, blockchain_addr, recipient, fee, Date.now(), pub_key, "", nonce + 1);
             const signed_tx = this.account.sign_tx(tx);
         
             return provider.send_tx(signed_tx);

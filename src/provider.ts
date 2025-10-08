@@ -16,6 +16,13 @@ class Provider {
         return acc_bal;
     }
 
+    async check_fee(): Promise<number> {
+        const res = await fetch(`${this.rpc_url}/fee`);
+        // p_fee stands for present
+        const p_fee = (await res.json()).fee;
+        return p_fee;
+    }
+
     async get_tx_pool(): Promise<Transaction[]> {
         const res = await fetch(`${this.rpc_url}/tx/pool`);
         const tx_pool = await res.json();
