@@ -2,6 +2,7 @@ export interface Transaction {
     amount: number;
     sender: string;
     recipient: string;
+    fee: number;
     tx_id: string;
     signature: string;
     nonce: number;

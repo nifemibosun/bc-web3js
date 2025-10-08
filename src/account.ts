@@ -2,7 +2,7 @@ import * as crypto from 'crypto';
 import { Buffer } from 'buffer';
 import elliptic_pkg from 'elliptic';
 import base58 from 'bs58';
-import Transaction from './transaction.js';
+import Tx from './transaction.js';
 
 const { ec: EC } = elliptic_pkg;
 const ec = new EC('secp256k1');
@@ -60,7 +60,7 @@ class Account {
         return blockchain_addr;
     }
 
-    sign_tx(tx: Transaction): Transaction {
+    sign_tx(tx: Tx): Tx {
         return tx.sign_tx(this.priv_key.toString('hex'));
     }
 }
