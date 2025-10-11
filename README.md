@@ -23,8 +23,6 @@ yarn add bc-web3js
 ## Getting Started
 Before using the bc-web3js SDK, you'll need an instance of your core ByteChain Blockchain implementation. This SDK is designed to interact with that instance, which typically represents a running ByteChain node (local or remote).
 
-Make sure to import your BlockChain class from your core ByteChain module:
-
 
 ## 1. Basic Setup & Querying Balance
 This example demonstrates how to initialize the bc-web3js SDK and perform basic queries like checking an account's balance and validating an address.

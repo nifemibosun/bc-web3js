@@ -37,11 +37,11 @@ class Tx implements Transaction {
         this.publicKey = publicKey;
         this.signature = signature;
         this.nonce = nonce;
-        this.tx_id = "";
+        this.tx_id = this.compute_tx_id();
     }
 
     private get_signing_data(): string {
-        return `${this.amount}${this.sender}${this.recipient}${this.publicKey}${this.fee}${this.nonce}${this.timestamp}`;        
+        return `${this.amount}${this.sender}${this.recipient}${this.fee}${this.publicKey}${this.nonce}${this.timestamp}`;        
     }
 
     private compute_tx_id(): string {
@@ -49,10 +49,6 @@ class Tx implements Transaction {
         const id = hash_tostr(data);
         
         return id;
-    }
-
-    get_tx_nonce(): number {
-        return this.nonce;
     }
 
     sign_tx(priv_key: string): Tx {
@@ -68,7 +64,6 @@ class Tx implements Transaction {
             const sign = base58.encode(compact_sig);
 
             this.signature = sign;
-            this.tx_id = this.compute_tx_id();
 
             return this;
         } catch (err) {
