@@ -1,14 +1,9 @@
-import { Tx_Type } from "./utils.js";
-
-
 export interface Transaction {
-    type: Tx_Type;
     amount: number;
     sender: string;
     recipient: string;
+    fee: number;
     tx_id: string;
-    bytecode?: string; 
-    contract_addr?: string;
     signature: string;
     nonce: number;
     timestamp: number;

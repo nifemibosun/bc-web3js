@@ -23,8 +23,6 @@ yarn add bc-web3js
 ## Getting Started
 Before using the bc-web3js SDK, you'll need an instance of your core ByteChain Blockchain implementation. This SDK is designed to interact with that instance, which typically represents a running ByteChain node (local or remote).
 
-Make sure to import your BlockChain class from your core ByteChain module:
-
 
 ## 1. Basic Setup & Querying Balance
 This example demonstrates how to initialize the bc-web3js SDK and perform basic queries like checking an account's balance and validating an address.
@@ -56,17 +54,16 @@ This section covers how to create new ByteChain accounts, load existing ones usi
 ```typescript
 import BCWeb3 from 'bc-web3js';
 
-
 const nodeUrl = "http://your-node-url-and-port";
 
 const bcWeb3 = new BCWeb3(nodeUrl);
 
 // 1. Create a new account (generates a new private key internally)
-const newAccount = bcWeb3.createAccount();
+bcWeb3.createAccount();
 
 console.log('--- New Account Created ---');
 
-console.log('Address:', newAccount.blockchain_addr);
+console.log('Address:', bcWeb3.wallet.account.blockchain_addr);
 
 
 // 2. Load an existing account using its private key
@@ -75,13 +72,15 @@ console.log('Address:', newAccount.blockchain_addr);
 
 const existingPrivateKey = 'YOUR_EXISTING_PRIVATE_KEY_HEX_HERE';
 
-const senderAccount = bcWeb3.loadAccount(existingPrivateKey);
+bcWeb3.loadAccount(existingPrivateKey);
+
+const senderAddress = bcWeb3.wallet.account.blockchain_addr;
 
 console.log('\n--- Loaded Account ---');
 
-console.log('Sender Address:', senderAccount.blockchain_addr);
+console.log('Sender Address:', senderAddress);
 
-console.log('Sender Balance:', bcWeb3.getBalance(senderAccount.blockchain_addr));
+console.log('Sender Balance:', bcWeb3.getBalance(senderAddress));
 
 
 // 3. Create and sign a transaction
@@ -102,7 +101,6 @@ bcWeb3.transfer(amount, recipientAddress)
 ```
 
 
-
 ## 3. Blockchain Data Querying
 
 Retrieve information about blocks and transactions from the blockchain instance.
@@ -110,17 +108,14 @@ Retrieve information about blocks and transactions from the blockchain instance.
 ```typescript
 import BCWeb3 from 'bc-web3js';
 
-
 const nodeUrl = "http://your-node-url-and-port";
 
 const bcWeb3 = new BCWeb3(nodeUrl);
-
 
 // 1. Get a block by its height (e.g., block 0 - the genesis block)
 const genesisBlock = bcWeb3.getBlock(0);
 
 console.log('Block Hash:', genesisBlock.block_header.block_hash);
-
 
 // 2. Get transactions currently in the mempool (transaction pool)
 const txPool = bcWeb3.getTxPool();

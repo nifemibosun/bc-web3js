@@ -29,14 +29,6 @@ export function hash_tostr(data_str: string): string {
     return hashed_data;
 }
 
-export const GEN_CONTRACT_RECIPIENT: string = "0x000000000000000000000000000000000000000BC";
-
-export enum Tx_Type {
-    BYTE_TX = 'byte_tx',
-    CONTRACT = 'contract',
-    CONTRACT_CALL = 'contract_call'
-}
-
 export const print = (...data: any): void => {
     console.dir(...data, { depth: null, colors: true });
 }
