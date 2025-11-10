@@ -1,6 +1,6 @@
 import base58 from "bs58";
 import elliptic_pkg from 'elliptic';
-import { Address, hash_tobuf, hash_tostr } from "./utils.js";
+import { Address, hash_tobuf, hash_tostr, PubKey } from "./utils.js";
 import { Tx } from "./interfaces.js";
 
 
@@ -17,7 +17,7 @@ class Transaction implements Tx {
     signature: string;
     nonce: number;
     timestamp: number;
-    publicKey: string;
+    publicKey: PubKey;
 
     constructor(
         amount: number,
@@ -25,7 +25,7 @@ class Transaction implements Tx {
         recipient: Address,
         fee: number,
         timestamp: number,
-        publicKey: string,
+        publicKey: PubKey,
         signature: string,
         nonce: number,
     ) {

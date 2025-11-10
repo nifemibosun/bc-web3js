@@ -1,6 +1,5 @@
 import { Address, PubKey, PrivKey } from "./utils.js";
 import { Tx, BlockHeader, BlockInterface } from "./interfaces.js";
-import Transaction from "./transaction.js"
 import Account from "./account.js";
 import Provider from "./provider.js";
 import Wallet from "./wallet.js";
@@ -56,6 +55,5 @@ export {
     PubKey,
     PrivKey,
     Account,
-    Transaction,
     BlockHeader,
 };
