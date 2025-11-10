@@ -1,17 +1,17 @@
 import base58 from "bs58";
 import elliptic_pkg from 'elliptic';
-import { hash_tobuf, hash_tostr } from "./utils.js";
-import { Transaction } from "./interfaces.js";
+import { Address, hash_tobuf, hash_tostr } from "./utils.js";
+import { Tx } from "./interfaces.js";
 
 
 const  { ec: EC } = elliptic_pkg;
 const ec = new EC('secp256k1');
 
 
-class Tx implements Transaction {
+class Transaction implements Tx {
     amount: number;
-    sender: string;
-    recipient: string;
+    sender: Address;
+    recipient: Address;
     fee: number;
     tx_id: string;
     signature: string;
@@ -21,8 +21,8 @@ class Tx implements Transaction {
 
     constructor(
         amount: number,
-        sender: string,
-        recipient: string,
+        sender: Address,
+        recipient: Address,
         fee: number,
         timestamp: number,
         publicKey: string,
@@ -51,7 +51,7 @@ class Tx implements Transaction {
         return id;
     }
 
-    sign_tx(priv_key: string): Tx {
+    sign_tx(priv_key: string): Transaction {
         try {
             const data_str = this.get_signing_data();
             
@@ -73,4 +73,4 @@ class Tx implements Transaction {
 }
 
 
-export default Tx;
+export default Transaction;

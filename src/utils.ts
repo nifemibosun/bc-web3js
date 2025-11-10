@@ -1,5 +1,9 @@
 import * as crypto from 'crypto';
 
+export type Address = string;
+export type PubKey = string;
+export type PrivKey = string;
+
 // Take a buffer as input an return a buffer as output
 function hash_func(data_buf: Buffer): Buffer {
     const hashed_data = crypto.createHash('sha256').update(data_buf).digest();

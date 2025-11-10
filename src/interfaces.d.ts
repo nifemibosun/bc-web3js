@@ -1,16 +1,18 @@
-export interface Transaction {
+import { Address, PubKey } from "./utils.ts";
+
+export interface Tx {
     amount: number;
-    sender: string;
-    recipient: string;
+    sender: Address;
+    recipient: Address;
     fee: number;
     tx_id: string;
     signature: string;
     nonce: number;
     timestamp: number;
-    publicKey: string;
+    publicKey: PubKey;
 }
 
-interface BlockHeader {
+export interface BlockHeader {
     nonce: number;
     block_height: number;
     timestamp: number;
@@ -20,7 +22,7 @@ interface BlockHeader {
     difficulty: number;
 }
 
-interface Block {
+export interface BlockInterface {
     block_header: BlockHeader;
-    transactions: Transaction[];
+    transactions: Tx[];
 }

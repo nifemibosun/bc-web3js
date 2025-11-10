@@ -1,16 +1,17 @@
-import { Block, Transaction } from "./interfaces.js";
+import { BlockInterface, Tx } from "./interfaces.js";
+import { Address } from "./utils.js";
 
 
 class Provider {
     constructor(private rpc_url: string) {}
 
-    async check_nonce(addr: string): Promise<number> {
+    async check_nonce(addr: Address): Promise<number> {
         const res = await fetch(`${this.rpc_url}/nonce/${addr}`);
         const n_nonce = (await res.json()).nonce;
         return n_nonce;
     }
 
-    async check_balance(addr: string): Promise<number> {
+    async check_balance(addr: Address): Promise<number> {
         const res = await fetch(`${this.rpc_url}/balance/${addr}`);
         const acc_bal = (await res.json()).balance;
         return acc_bal;
@@ -22,25 +23,25 @@ class Provider {
         return curr_fee;
     }
 
-    async get_tx_pool(): Promise<Transaction[]> {
+    async get_tx_pool(): Promise<Tx[]> {
         const res = await fetch(`${this.rpc_url}/tx/pool`);
         const tx_pool = await res.json();
         return tx_pool;
     }
 
-    async get_block(block_num: number): Promise<Block> {
+    async get_block(block_num: number): Promise<BlockInterface> {
         const res = await fetch(`${this.rpc_url}/chain/${block_num}`);
         const block = await res.json();
         return block;
     }
 
-    async get_chain(): Promise<Block[]> {
+    async get_chain(): Promise<BlockInterface[]> {
         const res = await fetch(`${this.rpc_url}/chain`);
         const chain = await res.json();
         return chain;
     }
 
-    async send_tx(tx: Transaction): Promise<string> {
+    async send_tx(tx: Tx): Promise<string> {
         const res = await fetch(
             `${this.rpc_url}/tx/send`,
             {

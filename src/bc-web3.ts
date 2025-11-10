@@ -1,10 +1,12 @@
-import { Block, Transaction } from "./interfaces.js";
+import { Address, PubKey, PrivKey } from "./utils.js";
+import { Tx, BlockHeader, BlockInterface } from "./interfaces.js";
+import Transaction from "./transaction.js"
 import Account from "./account.js";
 import Provider from "./provider.js";
 import Wallet from "./wallet.js";
 
 
-class BCWeb3 {
+export default class BCWeb3 {
     provider: Provider;
     wallet!: Wallet;
 
@@ -12,11 +14,11 @@ class BCWeb3 {
         this.provider = new Provider(node_url);
     }
 
-    async getBalance(address: string): Promise<number> {
+    async getBalance(address: Address): Promise<number> {
         return await this.provider.check_balance(address);
     }
 
-    async getNonce(address: string): Promise<number> {
+    async getNonce(address: Address): Promise<number> {
         return await this.provider.check_nonce(address);
     }
 
@@ -24,29 +26,36 @@ class BCWeb3 {
         this.wallet = new Wallet(new Account());
     }
 
-    importAccount(privKey: string) {
+    importAccount(privKey: PrivKey) {
         this.wallet = new Wallet(new Account(privKey));
     }
 
-    async getTxPool(): Promise<Transaction[]> {
+    async getTxPool(): Promise<Tx[]> {
         const transactionPool = await this.provider.get_tx_pool();
         return [...transactionPool];
     }
 
-    async getBlock(block_id: number): Promise<Block>  {
+    async getBlock(block_id: number): Promise<BlockInterface>  {
         const block = await this.provider.get_block(block_id);
         return block;
     }
 
-    async getChain(): Promise<Block[]>  {
+    async getChain(): Promise<BlockInterface[]>  {
         const chain = await this.provider.get_chain();
         return [...chain];
     }
 
-    async transfer(amount: number, recipient: string): Promise<string> {
+    async transfer(amount: number, recipient: Address): Promise<string> {
         const transferResult = await this.wallet.send_byte(this.provider, amount, recipient);
         return transferResult;
     }
 }
 
-export default BCWeb3;
+export {
+    Address,
+    PubKey,
+    PrivKey,
+    Account,
+    Transaction,
+    BlockHeader,
+};
