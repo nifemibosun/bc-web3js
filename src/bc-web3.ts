@@ -21,17 +21,18 @@ export default class BCWeb3 {
         return await this.provider.check_nonce(address);
     }
 
-    createAccount() {
-        this.wallet = new Wallet(new Account());
+    setWallet(account: Account) {
+        this.wallet = new Wallet(account);
     }
 
-    importAccount(privKey: PrivKey) {
-        this.wallet = new Wallet(new Account(privKey));
+    createAccount(): Account {
+        const new_account = new Account();
+        return new_account;
     }
 
-    async getTxPool(): Promise<Tx[]> {
-        const transactionPool = await this.provider.get_tx_pool();
-        return [...transactionPool];
+    importAccount(privKey: PrivKey): Account {
+        const imported_account = new Account(privKey);
+        return imported_account;
     }
 
     async getBlock(block_id: number): Promise<BlockInterface>  {
@@ -55,5 +56,5 @@ export {
     PubKey,
     PrivKey,
     Account,
-    BlockHeader,
+    BlockHeader
 };

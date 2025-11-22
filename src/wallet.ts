@@ -1,7 +1,7 @@
 import Account from "./account.js";
 import Provider from "./provider.js";
 import Transaction from "./transaction.js";
-import { Address } from "./utils.js";
+import type { Address } from "./utils.js";
 
 class Wallet {
     constructor(
