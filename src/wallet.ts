@@ -1,12 +1,14 @@
 import Account from "./account.js";
 import Provider from "./provider.js";
 import Transaction from "./transaction.js";
-import type { Address } from "./utils.js";
+import type { Address, PrivKey } from "./utils.js";
 
 class Wallet {
-    constructor(
-        public account: Account,
-    ) {}
+    public account;
+    
+    constructor(priv_key: PrivKey,) {
+        this.account = new Account(priv_key)
+    }
 
     async send_byte(provider: Provider, amount: number, recipient: Address): Promise<string> {
         try {

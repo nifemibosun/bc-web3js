@@ -29,10 +29,22 @@ class Provider {
         return tx_pool;
     }
 
+    async get_latest_block(): Promise<BlockInterface> {
+        const res = await fetch(`${this.rpc_url}/chain/latest`);
+        const block = await res.json();
+        return block;
+    }
+
     async get_block(block_num: number): Promise<BlockInterface> {
         const res = await fetch(`${this.rpc_url}/chain/${block_num}`);
         const block = await res.json();
         return block;
+    }
+
+    async get_blocks_in_range(start_num: number, end_num: number): Promise<BlockInterface[]> {
+        const res = await fetch(`${this.rpc_url}/chain/${start_num}/${end_num}`);
+        const blocks = await res.json();
+        return blocks;
     }
 
     async get_chain(): Promise<BlockInterface[]> {

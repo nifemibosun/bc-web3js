@@ -1,5 +1,5 @@
 import { Address, PubKey, PrivKey } from "./utils.js";
-import { Tx, BlockHeader, BlockInterface } from "./interfaces.js";
+import { BlockHeader, BlockInterface } from "./interfaces.js";
 import Account from "./account.js";
 import Provider from "./provider.js";
 import Wallet from "./wallet.js";
@@ -13,31 +13,37 @@ export default class BCWeb3 {
         this.provider = new Provider(node_url);
     }
 
-    async getBalance(address: Address): Promise<number> {
-        return await this.provider.check_balance(address);
+    createAccount(): { priv_key: PrivKey, pub_key: PubKey, blockchain_addr: Address } {
+        return Account.new();
     }
 
-    async getNonce(address: Address): Promise<number> {
-        return await this.provider.check_nonce(address);
+    importAccount(privKey: PrivKey): { priv_key: PrivKey, pub_key: PubKey, blockchain_addr: Address } {
+        return Account.new(privKey);
     }
 
-    setWallet(account: Account) {
-        this.wallet = new Wallet(account);
+    setWallet(priv_key: PrivKey) {
+        this.wallet = new Wallet(priv_key);
     }
 
-    createAccount(): Account {
-        const new_account = new Account();
-        return new_account;
+    async getBalance(): Promise<number> {
+        return await this.provider.check_balance(this.wallet.account.blockchain_addr);
     }
 
-    importAccount(privKey: PrivKey): Account {
-        const imported_account = new Account(privKey);
-        return imported_account;
+    async getNonce(): Promise<number> {
+        return await this.provider.check_nonce(this.wallet.account.blockchain_addr);
+    }
+
+    async getLatestBlock(): Promise<BlockInterface>  {
+        return await this.provider.get_latest_block();
     }
 
     async getBlock(block_id: number): Promise<BlockInterface>  {
-        const block = await this.provider.get_block(block_id);
-        return block;
+        return await this.provider.get_block(block_id);
+    }
+
+    async getBlocksInRange(start_num: number, end_num: number): Promise<BlockInterface[]> {
+        const blocks = await this.provider.get_blocks_in_range(start_num, end_num);
+        return [...blocks];
     }
 
     async getChain(): Promise<BlockInterface[]>  {
