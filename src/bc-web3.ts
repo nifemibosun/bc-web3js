@@ -1,4 +1,4 @@
-import { Address, PubKey, PrivKey } from "./utils.js";
+import { PubKey, PrivKey } from "./utils.js";
 import { BlockHeader, BlockInterface } from "./interfaces.js";
 import Account from "./account.js";
 import Provider from "./provider.js";
@@ -13,11 +13,11 @@ export default class BCWeb3 {
         this.provider = new Provider(node_url);
     }
 
-    createAccount(): { priv_key: PrivKey, pub_key: PubKey, blockchain_addr: Address } {
+    createAccount(): { priv_key: PrivKey, pub_key: PubKey } {
         return Account.new();
     }
 
-    importAccount(privKey: PrivKey): { priv_key: PrivKey, pub_key: PubKey, blockchain_addr: Address } {
+    importAccount(privKey: PrivKey): { priv_key: PrivKey, pub_key: PubKey } {
         return Account.new(privKey);
     }
 
@@ -26,11 +26,11 @@ export default class BCWeb3 {
     }
 
     async getBalance(): Promise<number> {
-        return await this.provider.check_balance(this.wallet.account.blockchain_addr);
+        return await this.provider.check_balance(this.wallet.account.pub_key);
     }
 
     async getNonce(): Promise<number> {
-        return await this.provider.check_nonce(this.wallet.account.blockchain_addr);
+        return await this.provider.check_nonce(this.wallet.account.pub_key);
     }
 
     async getLatestBlock(): Promise<BlockInterface>  {
@@ -51,14 +51,13 @@ export default class BCWeb3 {
         return [...chain];
     }
 
-    async transfer(amount: number, recipient: Address): Promise<string> {
+    async transfer(amount: number, recipient: PubKey): Promise<string> {
         const transferResult = await this.wallet.send_byte(this.provider, amount, recipient);
         return transferResult;
     }
 }
 
 export {
-    Address,
     PubKey,
     PrivKey,
     Account,

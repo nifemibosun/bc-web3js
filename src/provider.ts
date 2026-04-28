@@ -1,17 +1,17 @@
 import { BlockInterface, Tx } from "./interfaces.js";
-import { Address } from "./utils.js";
+import { PubKey } from "./utils.js";
 
 
 class Provider {
     constructor(private rpc_url: string) {}
 
-    async check_nonce(addr: Address): Promise<number> {
+    async check_nonce(addr: PubKey): Promise<number> {
         const res = await fetch(`${this.rpc_url}/nonce/${addr}`);
         const n_nonce = (await res.json()).nonce;
         return n_nonce;
     }
 
-    async check_balance(addr: Address): Promise<number> {
+    async check_balance(addr: PubKey): Promise<number> {
         const res = await fetch(`${this.rpc_url}/balance/${addr}`);
         const acc_bal = (await res.json()).balance;
         return acc_bal;

@@ -1,6 +1,5 @@
 import * as crypto from 'crypto';
 
-export type Address = string;
 export type PubKey = string;
 export type PrivKey = string;
 

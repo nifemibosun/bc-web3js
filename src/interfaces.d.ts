@@ -1,15 +1,14 @@
-import { Address, PubKey } from "./utils.ts";
+import { PubKey } from "./utils.ts";
 
 export interface Tx {
     amount: number;
-    sender: Address;
-    recipient: Address;
+    sender: PubKey;
+    recipient: PubKey;
     fee: number;
     tx_id: string;
-    signature: string;
-    nonce: number;
     timestamp: number;
-    publicKey: PubKey;
+    nonce: number;
+    signature: string;
 }
 
 export interface BlockHeader {
