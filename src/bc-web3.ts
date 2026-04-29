@@ -13,16 +13,14 @@ export default class BCWeb3 {
         this.provider = new Provider(node_url);
     }
 
-    createAccount(): { priv_key: PrivKey, pub_key: PubKey } {
-        return Account.new();
+    createAccount() {
+        let new_account = Account.new();
+        this.wallet = new Wallet(new_account.priv_key);
     }
 
-    importAccount(privKey: PrivKey): { priv_key: PrivKey, pub_key: PubKey } {
-        return Account.new(privKey);
-    }
-
-    setWallet(priv_key: PrivKey) {
-        this.wallet = new Wallet(priv_key);
+    importAccount(privKey: PrivKey) {
+        let imported_account = Account.new(privKey);
+        this.wallet = new Wallet(imported_account.priv_key);
     }
 
     async getBalance(): Promise<number> {
