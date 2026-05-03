@@ -1,7 +1,8 @@
 import base58 from "bs58";
 import elliptic_pkg from 'elliptic';
-import { hash_tobuf, hash_tostr, PubKey } from "./utils.js";
-import { Tx } from "./interfaces.js";
+import { hash_tobuf, hash_tostr, type PubKey } from "./utils.js";
+import { serialize_tx, toJSON } from "./utils.js";
+import type { Tx } from "./interfaces.js";
 
 
 const  { ec: EC } = elliptic_pkg;
@@ -38,7 +39,7 @@ class Transaction implements Tx {
     }
 
     private get_signing_data(): string {
-        return `${this.amount}${this.sender}${this.recipient}${this.fee}${this.nonce}${this.timestamp}`;        
+        return toJSON(serialize_tx(this));
     }
 
     private compute_tx_id(): string {
