@@ -1,7 +1,7 @@
 import { Buffer } from 'buffer';
 import elliptic_pkg from 'elliptic';
 import Transaction from './transaction.js';
-import { PubKey, PrivKey } from './utils.js';
+import type { PubKey, PrivKey } from './utils.js';
 
 const { ec: EC } = elliptic_pkg;
 const ec = new EC('secp256k1');

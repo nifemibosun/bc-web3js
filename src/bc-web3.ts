@@ -1,5 +1,5 @@
-import { PubKey, PrivKey } from "./utils.js";
-import { BlockHeader, BlockInterface } from "./interfaces.js";
+import type { PubKey, PrivKey } from "./utils.js";
+import type { BlockHeader, BlockInterface } from "./interfaces.js";
 import Account from "./account.js";
 import Provider from "./provider.js";
 import Wallet from "./wallet.js";
@@ -55,9 +55,12 @@ export default class BCWeb3 {
     }
 }
 
-export {
+export type {
     PubKey,
     PrivKey,
-    Account,
     BlockHeader
+}
+
+export {
+    Account
 };

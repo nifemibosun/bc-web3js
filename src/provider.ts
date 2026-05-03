@@ -1,5 +1,5 @@
-import { BlockInterface, Tx } from "./interfaces.js";
-import { PubKey } from "./utils.js";
+import type { BlockInterface, Tx } from "./interfaces.js";
+import type { PubKey } from "./utils.js";
 
 
 class Provider {
