@@ -1,37 +1,26 @@
-import * as crypto from 'crypto';
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex } from "@noble/hashes/utils.js";
 
 export type PubKey = string;
 export type PrivKey = string;
 
-// Take a buffer as input an return a buffer as output
-function hash_func(data_buf: Buffer): Buffer {
-    const hashed_data = crypto.createHash('sha256').update(data_buf).digest();
-
-    return hashed_data;
+// Take bytes as input and return bytes as output
+function hash_func(data_buf: Uint8Array): Uint8Array {
+    return sha256(data_buf);
 }
 
-// Take a str as input an return a buffer as output
-export function hash_tobuf(data_str: string): Buffer {
+// Take a str as input and return bytes as output
+export function hash_tobuf(data_str: string): Uint8Array {
     if (typeof data_str !== 'string') {
         throw new TypeError('Data must be a string.');
     }
 
-    const hex_buffer: Buffer = Buffer.from(data_str, 'utf8');
-    const hashed_transaction = hash_func(hex_buffer);
-    
-    return hashed_transaction;
+    const encoded = new TextEncoder().encode(data_str);
+    return hash_func(encoded);
 }
 
-// Take a str as input an return a str as output
+// Take a str as input and return a hex str as output
 export function hash_tostr(data_str: string): string {
-    if (typeof data_str !== 'string') {
-        throw new TypeError('Data must be a string.');
-    }
-    const hashed_data = crypto.createHash('sha256').update(data_str).digest('hex');
-
-    return hashed_data;
-}
-
-export const print = (...data: any): void => {
-    console.dir(...data, { depth: null, colors: true });
+    const hashed_data = hash_tobuf(data_str);
+    return bytesToHex(hashed_data);
 }

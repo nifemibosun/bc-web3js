@@ -37,14 +37,6 @@ const nodeUrl = "http://your-node-url-and-port";
 
 // 2. Initialize BCWeb3 with your blockchain instance
 const bcWeb3 = new BCWeb3(myByteChainInstance);
-
-// 3. Query an account balance
-const exampleAddress = 'BC1A2B3C4D5E6F7G8H9I0J1K2L3M4N5O6P7Q8R9S0T1U2V3W4X5Y6Z7';
-
-const balance = bcWeb3.getBalance(exampleAddress);
-
-console.log(`Balance of ${exampleAddress}: ${balance} byte`);
-
 ```
 
 ## 2. Account Creation & Transaction Signing
@@ -80,7 +72,7 @@ console.log('\n--- Loaded Account ---');
 
 console.log('Sender Address:', senderAddress);
 
-console.log('Sender Balance:', bcWeb3.getBalance(senderAddress));
+console.log('Sender Balance:', bcWeb3.getBalance());
 
 
 // 3. Create and sign a transaction
@@ -89,11 +81,10 @@ const amount = 10; // Amount of Byte to send
 const recipientAddress = 'BC_ANOTHER_ADDRESS_HERE'; // Replace with a recipient ByteChain address
 
 bcWeb3.transfer(amount, recipientAddress)
-    .then(res => {
-        // Use response here(Response is just a string)
+    .then((res: string) => {
+        // Use response here(Response is just a the tx id.s)
         console.log(res);
-    })
-    .catch(err => {
+    }).catch((err: unknown) => {
         // Use error here
         console.log(err);
     })
@@ -103,6 +94,26 @@ bcWeb3.transfer(amount, recipientAddress)
 
 ## 3. Blockchain Data Querying
 
+### Querying Balance
+```typescript
+import BCWeb3 from 'bc-web3js';
+
+const nodeUrl = "http://your-node-url-and-port";
+
+const bcWeb3 = new BCWeb3(nodeUrl);
+
+const exampleAddr = bcWeb3.wallet.account.pub_key;
+
+// account(s) are stored in the wallet field
+bcWeb3.createAccount();
+
+const balance = bcWeb3.getBalance();
+
+console.log(`Balance of ${exampleAddr}: ${balance} byte`);
+```
+
+
+### Querying Blockchain Data
 Retrieve information about blocks and transactions from the blockchain instance.
 
 ```typescript

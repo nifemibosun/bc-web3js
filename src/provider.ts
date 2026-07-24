@@ -25,32 +25,27 @@ class Provider {
 
     async get_tx_pool(): Promise<Tx[]> {
         const res = await fetch(`${this.rpc_url}/tx/pool`);
-        const tx_pool = await res.json();
-        return tx_pool;
+        return await res.json();
     }
 
     async get_latest_block(): Promise<BlockInterface> {
         const res = await fetch(`${this.rpc_url}/chain/latest`);
-        const block = await res.json();
-        return block;
+        return await res.json();
     }
 
     async get_block(block_num: number): Promise<BlockInterface> {
         const res = await fetch(`${this.rpc_url}/chain/${block_num}`);
-        const block = await res.json();
-        return block;
+        return await res.json();
     }
 
     async get_blocks_in_range(start_num: number, end_num: number): Promise<BlockInterface[]> {
         const res = await fetch(`${this.rpc_url}/chain/${start_num}/${end_num}`);
-        const blocks = await res.json();
-        return blocks;
+        return await res.json();
     }
 
     async get_chain(): Promise<BlockInterface[]> {
         const res = await fetch(`${this.rpc_url}/chain`);
-        const chain = await res.json();
-        return chain;
+        return await res.json();
     }
 
     async send_tx(tx: Tx): Promise<string> {
@@ -62,8 +57,13 @@ class Provider {
                 body: JSON.stringify(tx)
             }
         );
-        const tx_hash = (await res.json()).tx_id;
-        return tx_hash;
+
+        const body = await res.json();
+
+        if (!res.ok) throw new Error(body.error ?? `Node rejected transaction (status ${res.status})`);
+        if (!body.tx_id) throw new Error("Node accepted the request but returned no tx_id.");
+
+        return body.tx_id;
     }
 }
 

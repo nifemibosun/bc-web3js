@@ -1,4 +1,4 @@
-import { PubKey } from "./utils.ts";
+import type { PubKey } from "./utils.js";
 
 export interface Tx {
     amount: number;

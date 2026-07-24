@@ -14,13 +14,11 @@ export default class BCWeb3 {
     }
 
     createAccount() {
-        let new_account = Account.new();
-        this.wallet = new Wallet(new_account.priv_key);
+        this.wallet = new Wallet(Account.new().priv_key);
     }
 
     importAccount(privKey: PrivKey) {
-        let imported_account = Account.new(privKey);
-        this.wallet = new Wallet(imported_account.priv_key);
+        this.wallet = new Wallet(Account.new(privKey).priv_key);
     }
 
     async getBalance(): Promise<number> {
@@ -40,18 +38,15 @@ export default class BCWeb3 {
     }
 
     async getBlocksInRange(start_num: number, end_num: number): Promise<BlockInterface[]> {
-        const blocks = await this.provider.get_blocks_in_range(start_num, end_num);
-        return [...blocks];
+        return [...await this.provider.get_blocks_in_range(start_num, end_num)];
     }
 
     async getChain(): Promise<BlockInterface[]>  {
-        const chain = await this.provider.get_chain();
-        return [...chain];
+        return [...await this.provider.get_chain()];
     }
 
     async transfer(amount: number, recipient: PubKey): Promise<string> {
-        const transferResult = await this.wallet.send_byte(this.provider, amount, recipient);
-        return transferResult;
+        return await this.wallet.send_byte(this.provider, amount, recipient);
     }
 }
 

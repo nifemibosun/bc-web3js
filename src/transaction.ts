@@ -39,9 +39,8 @@ class Transaction implements Tx {
 
     private compute_tx_id(): string {
         const data = this.get_signing_data();
-        const id = hash_tostr(data);
         
-        return id;
+        return hash_tostr(data);
     }
 
     sign_tx(priv_key: PrivKey): Transaction {
